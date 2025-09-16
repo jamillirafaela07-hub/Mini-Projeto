@@ -24,6 +24,17 @@ class Student {
 
 // Classe para gerenciar a coleção de estudantes
 class StudentManager {
+    constructor() {
+        // transforma array em Map e converte para Student
+        const map = new Map();
+        for (const obj of studentsData) {
+            const s = new Student(obj.name, obj.age);
+            s.grades = obj.grades;
+            map.set(s.name, s);
+        }
+        this.studentsData = map;
+    }
+
     addStudent(name, age) {
         // Validações
         if (!name || typeof name !== 'string' || name.trim() === '') {
@@ -35,13 +46,13 @@ class StudentManager {
             return false;
         }
         // Validação adicional para evitar nomes duplicados no Map
-        if (studentsData.has(name.trim())) {
+        if (this.studentsData.has(name.trim())) {
             console.log("Erro: Já existe um estudante com esse nome.");
             return false;
         }
 
         const newStudent = new Student(name.trim(), age);
-        studentsData.set(newStudent.name, newStudent);
+        this.studentsData.set(newStudent.name, newStudent);
         console.log(`Estudante '${newStudent.name}' cadastrado com sucesso!`);
         return true;
     }
@@ -65,10 +76,9 @@ class StudentManager {
     }
 
     // Busca de estudante por nome (case-insensitive e parcial)
-    // A busca agora itera sobre os valores do Map
     findStudentByName(name) {
         const searchTerm = name.toLowerCase();
-        for (const student of studentsData.values()) {
+        for (const student of this.studentsData.values()) {
             if (student.name.toLowerCase().includes(searchTerm)) {
                 return student;
             }
@@ -78,14 +88,14 @@ class StudentManager {
     
     // Método para encontrar o estudante com a maior média
     findStudentWithHighestAverage() {
-        if (studentsData.size === 0) {
+        if (this.studentsData.size === 0) {
             return null;
         }
 
         let topStudent = null;
         let maxAverage = -1;
 
-        for (const student of studentsData.values()) {
+        for (const student of this.studentsData.values()) {
             const currentAverage = student.calculateAverage();
             if (currentAverage > maxAverage) {
                 maxAverage = currentAverage;
@@ -97,20 +107,20 @@ class StudentManager {
 
     // Método para calcular a média geral da turma
     calculateClassAverage() {
-        if (studentsData.size === 0) {
+        if (this.studentsData.size === 0) {
             return 0;
         }
         let totalAverages = 0;
-        for (const student of studentsData.values()) {
+        for (const student of this.studentsData.values()) {
             totalAverages += student.calculateAverage();
         }
-        return totalAverages / studentsData.size;
+        return totalAverages / this.studentsData.size;
     }
 
     // Métodos para relatórios de situação
     getApprovedStudents() {
         const approved = [];
-        for (const student of studentsData.values()) {
+        for (const student of this.studentsData.values()) {
             if (student.calculateAverage() >= 7.0) {
                 approved.push(student);
             }
@@ -120,7 +130,7 @@ class StudentManager {
 
     getRecoveryStudents() {
         const recovery = [];
-        for (const student of studentsData.values()) {
+        for (const student of this.studentsData.values()) {
             const avg = student.calculateAverage();
             if (avg >= 5.0 && avg < 7.0) {
                 recovery.push(student);
@@ -131,7 +141,7 @@ class StudentManager {
 
     getFailedStudents() {
         const failed = [];
-        for (const student of studentsData.values()) {
+        for (const student of this.studentsData.values()) {
             if (student.calculateAverage() < 5.0) {
                 failed.push(student);
             }
