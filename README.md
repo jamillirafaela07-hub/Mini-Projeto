@@ -1,4 +1,5 @@
 GERENCIADOR DE ALUNOS
+
 Esse projeto foi feito em Node.js para praticar programação com arrays e objetos. É um sistema simples que roda no terminal e permite cadastrar alunos, adicionar notas, buscar pelo nome, calcular médias e mostrar quem está aprovado, em recuperação ou reprovado.
 
 COMO USAR:
